@@ -10,7 +10,9 @@
 
 const int WINDOW_WIDTH = 1920;
 const int WINDOW_HEIGHT = 1080;
-const double SPAWN_INTERVAL = 0.5;
+const int WORLD_WIDTH = 4000;
+const int WORLD_HEIGHT = 500;
+const double SPAWN_INTERVAL = 0.05;
 const double FIGHTING_INTERVAL = 0.5;
 const double MINING_INTERVAL = 1.0;
 const int GRID_SIZE = 20; // Assuming each entity occupies a 20x20 grid space
@@ -20,7 +22,7 @@ const int UNIT_VISION = 2;
 const int FOOD_COST = 10;
 const float UNIT_SPEED = 144.0f;
 const int STARTING_FOOD = 100;
-const int MAX_TEAMS = 10;
+const int MAX_TEAMS = 100;
 
 enum antStates {
     MOVINGTOENEMY,
@@ -32,24 +34,6 @@ enum antStates {
 enum antTypes {
     MINER,
     FIGHTER
-};
-
-struct Vec2i {
-public:
-    int x;
-    int y;
-
-    Vec2i() : x(0), y(0) {}
-    Vec2i(int x, int y) : x(x), y(y) {}
-};
-
-struct Vec2f {
-public:
-    float x;
-    float y;
-
-    Vec2f() : x(0.0f), y(0.0f) {}
-    Vec2f(float x, float y) : x(x), y(y) {}
 };
 
 static SDL_Color HSVtoRGB(float h, float s, float v) {
@@ -72,3 +56,27 @@ static SDL_Color HSVtoRGB(float h, float s, float v) {
 
     return { static_cast<Uint8>(r * 255), static_cast<Uint8>(g * 255), static_cast<Uint8>(b * 255), 255 };
 }
+
+struct MovementAccumulator {
+    SDL_FPoint accumulatedMovement;
+
+    MovementAccumulator() : accumulatedMovement{ 0.0f, 0.0f } {}
+
+    SDL_Point addAndGetMovement(const SDL_FPoint& deltaMovement) {
+        // Add the delta movement to the accumulated movement
+        accumulatedMovement.x += deltaMovement.x;
+        accumulatedMovement.y += deltaMovement.y;
+
+        // Extract the integer part of the accumulated movement
+        SDL_Point intMovement = {
+            static_cast<int>(accumulatedMovement.x),
+            static_cast<int>(accumulatedMovement.y)
+        };
+
+        // Subtract the integer part from the accumulated movement
+        accumulatedMovement.x -= intMovement.x;
+        accumulatedMovement.y -= intMovement.y;
+
+        return intMovement;
+    }
+};

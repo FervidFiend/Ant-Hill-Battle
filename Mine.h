@@ -6,7 +6,7 @@ class Ant;
 
 class Mine : public Entity {
 public:
-    Mine(Vec2i pos);
+    Mine(SDL_Point pos);
 
     int maxOccupants = 3;
     std::vector<Ant*> occupants;

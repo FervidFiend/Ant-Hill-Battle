@@ -6,7 +6,7 @@ class Ant;
 
 class Hive : public Entity {
 public:
-    Hive(Vec2i pos, int team);
+    Hive(SDL_Point pos, int team);
 
     int team = 0;
     SDL_Color teamColor;

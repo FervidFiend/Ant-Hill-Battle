@@ -2,7 +2,7 @@
 #include "Hive.h"
 #include "Ant.h"
 
-Hive::Hive(Vec2i pos, int team) : Entity(pos, Vec2i(GRID_SIZE, GRID_SIZE), { 0, 0, 128, 255 }), team(team) {
+Hive::Hive(SDL_Point pos, int team) : Entity(pos, SDL_Point(GRID_SIZE, GRID_SIZE), { 0, 0, 128, 255 }), team(team) {
     teamColor = getTeamColor();
 }
 
@@ -21,7 +21,7 @@ void Hive::step(std::vector<Ant*>& ants, double deltaTime) {
 }
 
 void Hive::spawnAnt(std::vector<Ant*>& ants) {
-    Vec2i center = getCenter();
+    SDL_Point center = getCenter();
 
     food -= FOOD_COST;
     idCounter += 1;

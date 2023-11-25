@@ -3,7 +3,7 @@
 #include "Mine.h"
 #include "Hive.h"
 
-Ant::Ant(Vec2i pos, int team, int id, Hive* homeBase) : Entity(pos, Vec2i(UNIT_SIZE, UNIT_SIZE), homeBase->teamColor), team(team), id(id), hp(3), homeBase(homeBase) {
+Ant::Ant(SDL_Point pos, int team, int id, Hive* homeBase) : Entity(pos, SDL_Point(UNIT_SIZE, UNIT_SIZE), homeBase->teamColor), team(team), id(id), hp(3), homeBase(homeBase) {
     type = antTypes(rand() % 2);
     if (type == FIGHTER) {
         hp = 5;
@@ -37,12 +37,12 @@ void Ant::removeOpponent(Ant* ant) {
 void Ant::step(std::vector<Mine*>& mines, std::vector<Ant*>& ants, double deltaTime) {
     float thresholdSquared = std::pow(UNIT_SPEED * deltaTime, 2);
     lastActionTime += deltaTime;
-    Vec2i thisCenter = getCenter(); // Assuming this returns the center of the current object
+    SDL_Point thisCenter = getCenter(); // Assuming this returns the center of the current object
     validMines.clear();
     validEnemys.clear();
 
     for (Ant* ant : opponents) {
-        Vec2i otherCenter = ant->getCenter(); // Center of the mine
+        SDL_Point otherCenter = ant->getCenter(); // Center of the mine
 
         float dx = otherCenter.x - thisCenter.x;
         float dy = otherCenter.y - thisCenter.y;
@@ -54,7 +54,7 @@ void Ant::step(std::vector<Mine*>& mines, std::vector<Ant*>& ants, double deltaT
 
     for (Ant* ant : ants) {
         if (ant->team != team) {
-            Vec2i otherCenter = ant->getCenter(); // Center of the mine
+            SDL_Point otherCenter = ant->getCenter(); // Center of the mine
 
             float dx = otherCenter.x - thisCenter.x;
             float dy = otherCenter.y - thisCenter.y;
@@ -68,7 +68,7 @@ void Ant::step(std::vector<Mine*>& mines, std::vector<Ant*>& ants, double deltaT
         }
     }
     for (Mine* mine : mines) {
-        Vec2i otherCenter = mine->getCenter(); // Center of the mine
+        SDL_Point otherCenter = mine->getCenter(); // Center of the mine
 
         float dx = otherCenter.x - thisCenter.x;
         float dy = otherCenter.y - thisCenter.y;
@@ -89,7 +89,7 @@ void Ant::step(std::vector<Mine*>& mines, std::vector<Ant*>& ants, double deltaT
 
         // Find the closest Enemy
         for (Ant* ant : validEnemys) {
-            Vec2i diff;
+            SDL_Point diff;
             diff.x = ant->getCenter().x - thisCenter.x;
             diff.y = ant->getCenter().y - thisCenter.y;
 
@@ -114,7 +114,7 @@ void Ant::step(std::vector<Mine*>& mines, std::vector<Ant*>& ants, double deltaT
             state = FIGHTING;
         }
         else if (minDistanceSquared < thresholdSquared) {
-            Vec2i enemyCenter = closestEnemy->getCenter();
+            SDL_Point enemyCenter = closestEnemy->getCenter();
             this->position.x = enemyCenter.x - this->size.x / 2;
             this->position.y = enemyCenter.y - this->size.y / 2;
             state = MOVINGTOENEMY;
@@ -131,7 +131,7 @@ void Ant::step(std::vector<Mine*>& mines, std::vector<Ant*>& ants, double deltaT
 
         // Find the closest mine
         for (Mine* mine : validMines) {
-            Vec2i diff;
+            SDL_Point diff;
             diff.x = mine->getCenter().x - thisCenter.x;
             diff.y = mine->getCenter().y - thisCenter.y;
 
@@ -156,7 +156,7 @@ void Ant::step(std::vector<Mine*>& mines, std::vector<Ant*>& ants, double deltaT
             state = MINING;
         }
         else if (minDistanceSquared < thresholdSquared) {
-            Vec2i mineCenter = closestMine->getCenter();
+            SDL_Point mineCenter = closestMine->getCenter();
             this->position.x = mineCenter.x - this->size.x / 2;
             this->position.y = mineCenter.y - this->size.y / 2;
             state = MOVINGTOMINE;
@@ -168,11 +168,11 @@ void Ant::step(std::vector<Mine*>& mines, std::vector<Ant*>& ants, double deltaT
         }
     }
     else {
-        Vec2f direction((rand() % 3) - 1, (rand() % 3) - 1);
+        SDL_FPoint direction((rand() % 3) - 1, (rand() % 3) - 1);
         moveInDirection(direction, deltaTime);
         state = IDLE;
     }
 
-    position.x = std::min(std::max(0, position.x), WINDOW_WIDTH - UNIT_SIZE);
-    position.y = std::min(std::max(0, position.y), WINDOW_HEIGHT - UNIT_SIZE);
+    position.x = std::min(std::max(0, position.x), WORLD_WIDTH - UNIT_SIZE);
+    position.y = std::min(std::max(0, position.y), WORLD_HEIGHT - UNIT_SIZE);
 }

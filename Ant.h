@@ -7,7 +7,7 @@ class Hive;
 
 class Ant : public Entity {
 public:
-    Ant(Vec2i pos, int team, int id, Hive* homeBase);
+    Ant(SDL_Point pos, int team, int id, Hive* homeBase);
 
     int team = 0;
     int id = 0;

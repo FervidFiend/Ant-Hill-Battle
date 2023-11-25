@@ -2,7 +2,7 @@
 #include "Mine.h"
 #include "Ant.h"
 
-Mine::Mine(Vec2i pos) : Entity(pos, Vec2i(GRID_SIZE, GRID_SIZE), { 0, 128, 0, 255 }) {
+Mine::Mine(SDL_Point pos) : Entity(pos, SDL_Point(GRID_SIZE, GRID_SIZE), { 0, 128, 0, 255 }) {
 
 }
 
@@ -31,9 +31,9 @@ void Mine::removeMiner(Ant* ant) {
 }
 
 void Mine::step() {
-	Vec2i thisCenter = getCenter();
+	SDL_Point thisCenter = getCenter();
 	for (Ant* ant : occupants) {
-		Vec2i otherCenter = ant->getCenter(); // Center of the mine
+		SDL_Point otherCenter = ant->getCenter(); // Center of the mine
 
 		float dx = otherCenter.x - thisCenter.x;
 		float dy = otherCenter.y - thisCenter.y;
